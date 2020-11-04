@@ -2,15 +2,30 @@ import mysql.connector
 
 try:
     cnx = mysql.connector.connect(user='root', password='0412M4sql.', host='127.0.0.1', database='iot')
+
     cursor = cnx.cursor()
 
-    query_data = (3,)
-    query = (f"SELECT * FROM rooms WHERE id_room > %s;")
-    
-    cursor.execute(query, query_data)
+    query = (f"SELECT id_light FROM lights;")
+    cursor.execute(query)
 
-    for result in cursor:
-        print(result)
+    # # List comprehension
+    # last_id = [result[0] for result in cursor][-1]
+
+    # # 18--> 19-29
+    # for id_light in range(last_id+1, last_id+12):
+    #   query_data = (id_light, False, 0)
+    #   query = f"INSERT INTO lights(id_light, turned_on, intensity) values(%s, %s, %s);"
+    
+    #   cursor.execute(query, query_data)
+
+    # update lights id_light > 18 turned_on true
+    # query = f"UPDATE lights SET turned_on = false, intensity = 0;"
+
+    # delte lights id_light > 5
+    #query = f"DELETE FROM lights WHERE id_light > 7;"
+    # cursor.execute(query)
+
+    cnx.commit()
 
 except mysql.connector.Error as err:
 
@@ -22,4 +37,5 @@ except mysql.connector.Error as err:
     print(err)
     
 finally:
-  cnx.close()
+  if 'cnx' in locals() or 'cnx' in globals():
+    cnx.close()
